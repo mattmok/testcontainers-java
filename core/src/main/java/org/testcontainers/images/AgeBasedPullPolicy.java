@@ -1,5 +1,6 @@
 package org.testcontainers.images;
 
+import lombok.EqualsAndHashCode;
 import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.testcontainers.utility.DockerImageName;
@@ -12,6 +13,7 @@ import java.time.Instant;
  */
 @Slf4j
 @Value
+@EqualsAndHashCode(callSuper = false)
 class AgeBasedPullPolicy extends AbstractImagePullPolicy {
 
     Duration maxAge;

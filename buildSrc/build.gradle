@@ -3,5 +3,12 @@ plugins {
 }
 
 repositories {
-    mavenCentral()
+    maven {
+        allowInsecureProtocol = true
+        url = "http://cloud.tiamaes.com:6001/nexus/repository/public/"
+        credentials {
+            username = findProperty("ossrhUsername")?.toString()
+            password = findProperty("ossrhPassword")?.toString()
+        }
+    }
 }

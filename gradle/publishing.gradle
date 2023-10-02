@@ -1,14 +1,10 @@
 apply plugin: 'maven-publish'
 
 task sourceJar(type: Jar) {
-    archiveClassifier.set( 'sources')
+    archiveClassifier.set('sources')
     from sourceSets.main.allJava
 }
 
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    archiveClassifier.set('javadoc')
-    from javadoc
-}
 
 jar.archiveClassifier.set("original")
 
@@ -17,7 +13,6 @@ publishing {
         mavenJava(MavenPublication) { publication ->
             artifactId = project.name
             artifact sourceJar
-            artifact javadocJar
 
             artifact project.tasks.jar
             artifacts.removeAll { it.classifier == jar.archiveClassifier.get() }
@@ -57,7 +52,7 @@ publishing {
 
                 def dependenciesNode = rootNode.appendNode('dependencies')
 
-                def apiDeps= project.configurations.api.resolvedConfiguration.firstLevelModuleDependencies
+                def apiDeps = project.configurations.api.resolvedConfiguration.firstLevelModuleDependencies
                 def providedDeps = project.configurations.provided.resolvedConfiguration.firstLevelModuleDependencies
                 def newApiDeps = apiDeps - providedDeps
 
@@ -95,10 +90,11 @@ publishing {
     }
     repositories {
         maven {
-            url("https://oss.sonatype.org/service/local/staging/deploy/maven2")
+            allowInsecureProtocol = true
+            url = uri("http://cloud.tiamaes.com:6001/nexus/repository/m1-snapshots/")
             credentials {
-                username = System.getenv("OSSRH_USERNAME")
-                password = System.getenv("OSSRH_PASSWORD")
+                username = findProperty("ossrhUsername")?.toString()
+                password = findProperty("ossrhPassword")?.toString()
             }
         }
     }

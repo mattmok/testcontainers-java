@@ -2,10 +2,6 @@ plugins {
     id 'java'
 }
 
-repositories {
-    mavenCentral()
-}
-
 dependencies {
     testImplementation 'org.apache.curator:curator-framework:5.5.0'
     testImplementation 'org.testcontainers:testcontainers'

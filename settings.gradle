@@ -1,7 +1,15 @@
 buildscript {
     repositories {
         maven {
-            url "https://plugins.gradle.org/m2/"
+            url "https://maven.aliyun.com/repository/gradle-plugin"
+        }
+        maven {
+            allowInsecureProtocol = true
+            url "http://cloud.tiamaes.com:6001/nexus/repository/public/"
+            credentials {
+                username = ossrhUsername
+                password = ossrhPassword
+            }
         }
     }
     dependencies {
@@ -18,7 +26,6 @@ apply plugin: "org.gradle.toolchains.foojay-resolver-convention"
 rootProject.name = 'testcontainers-java'
 
 include "bom"
-
 include "testcontainers"
 project(':testcontainers').projectDir = "$rootDir/core" as File
 
@@ -31,33 +38,32 @@ include ':docs:examples:junit4:generic'
 include ':docs:examples:junit4:redis'
 include ':docs:examples:junit5:redis'
 include ':docs:examples:spock:redis'
-
-include 'test-support'
-
-ext.isCI = System.getenv("CI") != null
-
-buildCache {
-    local {
-        enabled = !isCI
-    }
-    remote(HttpBuildCache) {
-        push = isCI && !System.getenv("READ_ONLY_REMOTE_GRADLE_CACHE")
-        enabled = true
-        url = 'https://ge.testcontainers.org/cache/'
-        credentials {
-            username = 'ci'
-            password = System.getenv("GRADLE_ENTERPRISE_CACHE_PASSWORD")
-        }
-    }
-}
-
-gradleEnterprise {
-    buildScan {
-        server = "https://ge.testcontainers.org/"
-        publishAlways()
-        publishIfAuthenticated()
-        uploadInBackground = !isCI
-        captureTaskInputFiles = true
-    }
-
-}
+//
+//include 'test-support'
+//
+//ext.isCI = System.getenv("CI") != null
+//
+//buildCache {
+//    local {
+//        enabled = !isCI
+//    }
+//    remote(HttpBuildCache) {
+//        push = isCI && !System.getenv("READ_ONLY_REMOTE_GRADLE_CACHE")
+//        enabled = true
+//        url = 'https://ge.testcontainers.org/cache/'
+//        credentials {
+//            username = 'ci'
+//            password = System.getenv("GRADLE_ENTERPRISE_CACHE_PASSWORD")
+//        }
+//    }
+//}
+//
+//gradleEnterprise {
+//    buildScan {
+//        server = "https://ge.testcontainers.org/"
+//        publishAlways()
+//        publishIfAuthenticated()
+//        uploadInBackground = !isCI
+//        captureTaskInputFiles = true
+//    }
+//}

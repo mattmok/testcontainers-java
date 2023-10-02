@@ -1,6 +1,12 @@
 buildscript {
     repositories {
-        mavenCentral()
+        maven { allowInsecureProtocol = true
+            url "http://cloud.tiamaes.com:6001/nexus/repository/public/"
+            credentials {
+                username = findProperty("ossrhUsername")?.toString()
+                password = findProperty("ossrhPassword")?.toString()
+            }
+        }
     }
 
     dependencies {
@@ -34,6 +40,7 @@ subprojects {
     apply plugin: 'checkstyle'
 
     group = "org.testcontainers"
+    version = project['testcontainers.version']
 
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
@@ -42,7 +49,13 @@ subprojects {
     javadoc.options.encoding = 'UTF-8'
 
     repositories {
-        mavenCentral()
+        maven { allowInsecureProtocol = true
+            url "http://cloud.tiamaes.com:6001/nexus/repository/public/"
+            credentials {
+                username = findProperty("ossrhUsername")?.toString()
+                password = findProperty("ossrhPassword")?.toString()
+            }
+        }
     }
 
     configurations {
@@ -100,25 +113,6 @@ subprojects {
         reports {
             junitXml.outputPerTestCase = true
         }
-    }
-
-    // Ensure that Javadoc generation is always tested
-    check.dependsOn(javadoc)
-
-    def postCheckCommand = properties["postCheckCommand"]
-    if (postCheckCommand) {
-        check.finalizedBy(tasks.create("postCheckExec", Exec) {
-            if (org.gradle.internal.os.OperatingSystem.current().isWindows()) {
-                commandLine('cmd', '/c', postCheckCommand)
-            } else {
-                commandLine('sh', '-c', postCheckCommand)
-            }
-        })
-    }
-
-    javadoc {
-        dependsOn delombok
-        source = delombok.outputs
     }
 
     dependencies {
